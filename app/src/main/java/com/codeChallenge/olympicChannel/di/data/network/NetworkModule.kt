@@ -2,6 +2,7 @@ package com.codeChallenge.olympicChannel.di.data.network
 
 
 import android.content.Context
+import com.bluelinelabs.logansquare.LoganSquare
 import com.codeChallenge.olympicChannel.BuildConfig
 import com.codeChallenge.olympicChannel.di.data.network.intercepter.HeaderInterceptor
 import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity
@@ -61,6 +62,7 @@ class NetworkModule {
             .baseUrl(BuildConfig.baseUrl)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
+//            .addConverterFactory(LoganSquareCo.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
             .build()
     }

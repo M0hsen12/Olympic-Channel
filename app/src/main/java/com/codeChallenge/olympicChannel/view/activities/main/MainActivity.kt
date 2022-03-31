@@ -1,7 +1,8 @@
-package com.codeChallenge.olympicChannel.view.activities
+package com.codeChallenge.olympicChannel.view.activities.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.codeChallenge.olympicChannel.R
 import com.codeChallenge.olympicChannel.databinding.ActivityMainBinding
 import com.codeChallenge.olympicChannel.di.viewModelsInjections.InjectionViewModelProvider
@@ -19,6 +20,20 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initUI()
+        observeLiveData()
+
+    }
+
+    private fun observeLiveData() {
+        viewModel?.gamesLiveData?.observe(this){
+            Log.e("TAG", "observeLiveData:${it.size} " )
+        }
+
+    }
+
+    private fun initUI() {
+        viewModel = mViewModelFactoryActivity.get(this, MainActivityViewModel::class)
 
     }
 }
