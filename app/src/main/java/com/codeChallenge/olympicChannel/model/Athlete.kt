@@ -3,23 +3,30 @@ package com.codeChallenge.olympicChannel.model
 
 import com.bluelinelabs.logansquare.annotation.JsonField
 import com.bluelinelabs.logansquare.annotation.JsonObject
+import com.google.gson.annotations.SerializedName
 
-@JsonObject
 data class Athlete(
-    @JsonField(name = ["athlete_id"])
+    @SerializedName("athlete_id")
     var athleteId: String? = null,
-    @JsonField(name = ["bio"])
+
+    @SerializedName("bio")
     var bio: String? = null,
-    @JsonField(name = ["dateOfBirth"])
+
+    @SerializedName("dateOfBirth")
     var dateOfBirth: String? = null,
-    @JsonField(name = ["height"])
+
+    @SerializedName("height")
     var height: Int? = null,
-    @JsonField(name = ["name"])
+
+    @SerializedName("name")
     var name: String? = null,
-    @JsonField(name = ["photo_id"])
+
+    @SerializedName("photo_id")
     var photoId: Int? = null,
-    @JsonField(name = ["surname"])
+
+    @SerializedName("surname")
     var surname: String? = null,
-    @JsonField(name = ["weight"])
+
+    @SerializedName("weight")
     var weight: Int? = null
 )

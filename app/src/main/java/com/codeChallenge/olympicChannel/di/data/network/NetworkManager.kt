@@ -16,7 +16,7 @@ class NetworkManager @Inject constructor(
         return retrofitRestApi.create(tClass)
     }
 
-    fun getCurrencyRouter(): OlympicRoute {
+    fun getOlympicRoute(): OlympicRoute {
         return retrofitRestApi.create(OlympicRoute::class.java)
     }
 

@@ -2,14 +2,14 @@ package com.codeChallenge.olympicChannel.model
 
 import com.bluelinelabs.logansquare.annotation.JsonField
 import com.bluelinelabs.logansquare.annotation.JsonObject
+import com.google.gson.annotations.SerializedName
 
 
-@JsonObject
-class Games(
-    @JsonField(name = ["city"])
+data class Games(
+    @SerializedName("city")
     var city: String? = null,
-    @JsonField(name = ["game_id"])
-    var gameId: Int?= null,
-    @JsonField(name = ["year"])
+    @SerializedName("game_id")
+    var game_Id: Int?= null,
+    @SerializedName("year")
     var year: Int? = null
 )
