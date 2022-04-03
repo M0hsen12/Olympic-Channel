@@ -2,7 +2,6 @@ package com.codeChallenge.olympicChannel.di.data.network
 
 
 import android.content.Context
-import com.bluelinelabs.logansquare.LoganSquare
 import com.codeChallenge.olympicChannel.BuildConfig
 import com.codeChallenge.olympicChannel.di.data.network.intercepter.HeaderInterceptor
 import com.github.pwittchen.reactivenetwork.library.rx2.Connectivity

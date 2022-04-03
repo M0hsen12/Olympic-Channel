@@ -8,14 +8,15 @@ import com.codeChallenge.olympicChannel.databinding.ActivityMainBinding
 import com.codeChallenge.olympicChannel.di.viewModelsInjections.InjectionViewModelProvider
 import com.codeChallenge.olympicChannel.view.base.BaseActivity
 import com.codeChallenge.olympicChannel.viewModel.activities.main.MainActivityViewModel
+import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() {
 
     @Inject
     lateinit var mViewModelFactoryActivity: InjectionViewModelProvider<MainActivityViewModel>
-
     override fun getLayoutId() = R.layout.activity_main
+    private var disposable = CompositeDisposable()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,14 +27,27 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
     }
 
     private fun observeLiveData() {
-        viewModel?.gamesLiveData?.observe(this){
-            Log.e("TAG", "observeLiveData:${it.size} " )
+        viewModel?.apply {
+            this@MainActivity.disposable.add(gamesListProcessor.subscribe {
+                it.forEach { gamesEntity ->
+                    Log.e(TAG, "observeLiveData: ${gamesEntity.city} -- ${gamesEntity.athletes.size}" )
+
+                }
+
+            })
         }
+
 
     }
 
     private fun initUI() {
         viewModel = mViewModelFactoryActivity.get(this, MainActivityViewModel::class)
 
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.dispose()
     }
 }

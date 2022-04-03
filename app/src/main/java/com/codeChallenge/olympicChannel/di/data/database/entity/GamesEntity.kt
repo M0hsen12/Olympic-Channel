@@ -3,7 +3,6 @@ package com.codeChallenge.olympicChannel.di.data.database.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.bluelinelabs.logansquare.annotation.JsonField
 import com.codeChallenge.olympicChannel.model.Athlete
 import java.util.ArrayList
 

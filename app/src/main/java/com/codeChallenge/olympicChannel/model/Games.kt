@@ -1,7 +1,5 @@
 package com.codeChallenge.olympicChannel.model
 
-import com.bluelinelabs.logansquare.annotation.JsonField
-import com.bluelinelabs.logansquare.annotation.JsonObject
 import com.google.gson.annotations.SerializedName
 
 
