@@ -9,9 +9,6 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
 import com.codeChallenge.olympicChannel.BuildConfig
 import com.codeChallenge.olympicChannel.R
 import com.codeChallenge.olympicChannel.model.Athlete
@@ -20,6 +17,7 @@ import kotlinx.android.synthetic.main.item_home_athlete.view.*
 
 class AthleteAdapter(private val onItemsClicked: ((game: Athlete) -> Unit)? = null) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    var currentYear = 0
 
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Athlete>() {
 
@@ -50,7 +48,7 @@ class AthleteAdapter(private val onItemsClicked: ((game: Athlete) -> Unit)? = nu
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is ViewHolderClass -> {
-                holder.bind(differ.currentList.get(position))
+                holder.bind(differ.currentList.get(position), currentYear)
             }
         }
     }
@@ -59,7 +57,8 @@ class AthleteAdapter(private val onItemsClicked: ((game: Athlete) -> Unit)? = nu
         return differ.currentList.size
     }
 
-    fun submitList(list: List<Athlete>) {
+    fun submitList(list: List<Athlete>, year: Int) {
+        currentYear = year
         differ.submitList(list)
     }
 
@@ -70,12 +69,13 @@ class AthleteAdapter(private val onItemsClicked: ((game: Athlete) -> Unit)? = nu
     ) : RecyclerView.ViewHolder(itemView) {
 
         @SuppressLint("CheckResult")
-        fun bind(item: Athlete) = with(itemView) {
+        fun bind(item: Athlete, currentYear: Int) = with(itemView) {
             itemView.setOnClickListener {
                 onItemsClicked?.invoke(item)
             }
 
-            Log.e("TAG", "bind:sc ${item.score}" )
+
+
             itemView.item_athlete_name.text = "${item.name} ${item.surname}"
             Glide.with(this.context)
                 .load("${BuildConfig.baseUrl}/athletes/${item.athleteId}/photo")
@@ -85,8 +85,6 @@ class AthleteAdapter(private val onItemsClicked: ((game: Athlete) -> Unit)? = nu
         }
     }
 
-    interface Interaction {
-        fun onItemSelected(position: Int, item: Athlete)
-    }
+
 }
 

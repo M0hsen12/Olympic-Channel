@@ -101,10 +101,17 @@ class HomePageAdapter(
                 }
                 adapter = myAdapter
 
-                myAdapter.submitList(item.athletes)
+                val list = orderListByGlobalPoint(item.athletes, item.year)
+                myAdapter.submitList(list, item.year)
 
             }
         }
+
+        private fun orderListByGlobalPoint(athletes: List<Athlete>, currentYear: Int) =
+            athletes.sortedByDescending { ath ->
+                ath.score?.find { it.year == currentYear }?.getGlobalScore()?:0
+            }
+
 
     }
 

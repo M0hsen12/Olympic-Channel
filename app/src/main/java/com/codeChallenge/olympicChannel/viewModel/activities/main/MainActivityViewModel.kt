@@ -153,7 +153,8 @@ class MainActivityViewModel @Inject constructor(
     private fun handleScore(mapList: List<Athlete>): List<Athlete> {
         mapList.forEach { mapAthlete ->
             athleteList.find { it == mapAthlete }?.let {
-                mapAthlete.score = it.score
+                if (mapAthlete.score?.isEmpty() == true)
+                    mapAthlete.score = it.score
             }
         }
 

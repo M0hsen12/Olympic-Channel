@@ -14,4 +14,17 @@ data class AthleteScore(
     var silver: Int? = 0,
     @SerializedName("year")
     var year: Int? = 0
-)
+) {
+    fun getGlobalScore(): Int {
+
+        return ((gold ?: 0) * GOLD_POINT) + ((silver ?: 0) * SILVER_POINT) + ((bronze
+            ?: 0) * BRONZE_POINT)
+    }
+
+
+    companion object {
+        const val GOLD_POINT = 5
+        const val SILVER_POINT = 3
+        const val BRONZE_POINT = 1
+    }
+}
