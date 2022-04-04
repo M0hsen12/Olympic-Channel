@@ -1,19 +1,22 @@
 package com.codeChallenge.olympicChannel.viewModel.activities.main
 
+import android.annotation.SuppressLint
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.codeChallenge.olympicChannel.di.data.appManager.DataManager
 import com.codeChallenge.olympicChannel.di.data.database.entity.GamesEntity
 import com.codeChallenge.olympicChannel.model.Athlete
+import com.codeChallenge.olympicChannel.model.AthleteScore
 import com.codeChallenge.olympicChannel.model.Games
 import com.codeChallenge.olympicChannel.view.base.BaseViewModel
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.processors.BehaviorProcessor
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
-import java.util.ArrayList
+import retrofit2.Response
+import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -22,6 +25,9 @@ class MainActivityViewModel @Inject constructor(
     compositeDisposable: CompositeDisposable
 ) : BaseViewModel(dataManager, compositeDisposable) {
     private val gamesEntityList = ArrayList<GamesEntity>()
+    private val athleteList = ArrayList<Athlete>()
+    private val mapGamesWithAthletes = hashMapOf<Games, List<Athlete>>()
+
     var gamesListProcessor = BehaviorProcessor.create<List<GamesEntity>>()
     val TAG = "QQQ"
 
@@ -61,37 +67,114 @@ class MainActivityViewModel @Inject constructor(
     }
 
     private fun getAthletesForEachGame(games: List<Games>?) {
-        games?.forEachIndexed { index, game ->
-            disposable[index.plus(1)] =
-                mDataManager.networkManager.getOlympicRoute()
-                    .getAllAthletesInAGame(game.game_Id ?: 0)
-                    .delay(100, TimeUnit.MILLISECONDS)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        if (it?.isSuccessful == true) {
-                            gamesEntityList.add(handleList(game, it.body().orEmpty()))
 
-                            if (games.size == index.plus(1))  //last item of list
-                                insertGamesIntoDatabase()
+        disposable[1]?.dispose()
+        disposable[1] = Observable.fromIterable(games)
+            .map { eachGame ->
+                getPairOfAthletesAndGame(eachGame)
+            }.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { pair ->
+                prepareAthleteListForGetScore(pair, games)
+            }
 
+        addDisposable(disposable[1])
+    }
+
+    private fun prepareAthleteListForGetScore(
+        pair: Pair<Games, Observable<Response<List<Athlete>>>>,
+        mainGamesList: List<Games>?
+    ) {
+
+        disposable[2] =
+            pair.second.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    {
+                        if (it.isSuccessful) {
+                            athleteList.addAll(it.body().orEmpty())
+                            mapGamesWithAthletes[pair.first] = it.body().orEmpty()
                         }
 
-
                     }, {
-                        gamesEntityList.add(handleList(game, emptyList()))
-                        Log.e("TAG", "getAPI athleses list: ${it.message} -")
-                        errorLiveData.postValue(it)
+                        Log.e(TAG, "on error  $it ")
+                    }, {
+                        if (mainGamesList?.size == mapGamesWithAthletes.size)
+                            getScoreOfEachAthlete()
+
                     })
-            addDisposable(disposable[index.plus(1)])
-        }
+
+        addDisposable(disposable[2])
     }
+
+
+    private fun getScoreOfEachAthlete() {
+        var counter = 0
+        disposable[3] = Observable.fromIterable(athleteList)
+            .flatMap {
+                mDataManager.networkManager.getOlympicRoute()
+                    .getScoreOfAthlete(it.athleteId?.toInt() ?: 0)
+            }.subscribe(
+                {
+                    if (it.isSuccessful) {
+                        athleteList[counter].score = it.body().orEmpty() as ArrayList<AthleteScore>
+                        counter++
+                    }
+                }, {
+                    Log.e(TAG, "on error: ${it.localizedMessage}")
+                }, {
+                    Log.e(TAG, "getScoreOfEachAthlete1:WHERE I SHOULD BE ")
+                    setupGameEntityWithScores()
+
+                })
+        addDisposable(disposable[3])
+    }
+
+
+    private fun setupGameEntityWithScores() {
+
+        mapGamesWithAthletes.forEach {
+
+            gamesEntityList.add(
+                GamesEntity(
+                    city = it.key.city ?: "",
+                    gameId = it.key.game_Id ?: 0,
+                    year = it.key.year ?: 0,
+                    athletes = handleScore(it.value)
+                )
+            )
+        }
+
+
+        insertGamesIntoDatabase()
+
+    }
+
+    private fun handleScore(mapList: List<Athlete>): List<Athlete> {
+        mapList.forEach { mapAthlete ->
+            athleteList.find { it == mapAthlete }?.let {
+                mapAthlete.score = it.score
+            }
+        }
+
+        return mapList
+    }
+
+
+    private fun getPairOfAthletesAndGame(game: Games): Pair<Games, Observable<Response<List<Athlete>>>> {
+        return Pair(
+            game, mDataManager.networkManager.getOlympicRoute()
+                .getAllAthletesInAGame(game.game_Id ?: 0)
+        )
+    }
+
 
     private fun insertGamesIntoDatabase() {
         CoroutineScope(IO).launch {
-            delay(5000)
             mDataManager.databaseManager.gamesDao().insertAll(gamesEntityList)
-        }.invokeOnCompletion { Log.e(TAG, "insertGamesIntoDatabase: DONE ") }
+        }.invokeOnCompletion {
+            gamesListProcessor.onNext(gamesEntityList)
+        }
     }
 
     private fun getAllItemsInDatabase(onItemReceives: (list: List<GamesEntity>) -> Unit) {
@@ -100,39 +183,6 @@ class MainActivityViewModel @Inject constructor(
             onItemReceives.invoke(list)
         }
     }
-
-    private fun handleList(game: Games, list: List<Athlete>): GamesEntity {
-        return GamesEntity(
-            gameId = game.game_Id ?: 0,
-            city = game.city ?: "",
-            year = game.year ?: 0,
-            athletes = list
-        )
-    }
-
-    private fun getAthlete(id: Int) {
-        disposable[1]?.dispose()
-        disposable[1] =
-            mDataManager.networkManager.getOlympicRoute()
-                .getAllAthletesInAGame(id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    if (it?.isSuccessful == true) {
-
-                        Log.e("TAG", "$id getAthlete: ${it.body()?.last()?.surname}")
-
-
-                    }
-
-                }, {
-                    Log.e("TAG", "getAPI: ${it.message}")
-                    errorLiveData.postValue(it)
-                })
-        addDisposable(disposable[1])
-    }
-
-
 
 
     override fun onCleared() {

@@ -1,7 +1,9 @@
 package com.codeChallenge.olympicChannel.model
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.google.gson.annotations.SerializedName
+import java.util.ArrayList
 
 data class Athlete(
     @SerializedName("athlete_id")
@@ -26,5 +28,9 @@ data class Athlete(
     var surname: String? = null,
 
     @SerializedName("weight")
-    var weight: Int? = null
+    var weight: Int? = null,
+
+    @JsonIgnore
+    var score: ArrayList<AthleteScore>? = ArrayList()
+
 )

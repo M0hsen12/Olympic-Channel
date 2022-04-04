@@ -1,6 +1,7 @@
 package com.codeChallenge.olympicChannel.di.data.network.route
 
 import com.codeChallenge.olympicChannel.model.Athlete
+import com.codeChallenge.olympicChannel.model.AthleteScore
 import com.codeChallenge.olympicChannel.model.Games
 import io.reactivex.Observable
 import retrofit2.Response
@@ -17,7 +18,13 @@ interface OlympicRoute {
     @GET("/games/{Id}/athletes")
     fun getAllAthletesInAGame(
         @Path("Id") gameId :Int
-    ): Observable<Response<List<Athlete>>?>
+    ): Observable<Response<List<Athlete>>>
+
+
+    @GET("/athletes/{Id}/results")
+    fun getScoreOfAthlete(
+        @Path("Id") athletesId :Int
+    ): Observable<Response<List<AthleteScore>>>
 
 
 
