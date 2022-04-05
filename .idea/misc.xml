@@ -9,6 +9,18 @@
         <entry key="..\:/Android/Android Projects/OlympicChannel/app/src/main/res/layout/item_home_athlete.xml" value="0.19739583333333333" />
         <entry key="..\:/Android/Android Projects/OlympicChannel/app/src/main/res/layout/item_home_games.xml" value="0.19739583333333333" />
         <entry key="..\:/Android/Android Projects/OlympicChannel/app/src/main/res/layout/item_home_games_empty_list.xml" value="0.19739583333333333" />
+        <entry key="..\:/testProject/OlympicChannel/app/src/main/res/drawable/bg_black_circle.xml" value="0.298" />
+        <entry key="..\:/testProject/OlympicChannel/app/src/main/res/drawable/bg_deatil_pic_view.xml" value="0.298" />
+        <entry key="..\:/testProject/OlympicChannel/app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" value="0.298" />
+        <entry key="..\:/testProject/OlympicChannel/app/src/main/res/drawable/ic_bronze_medal.xml" value="0.1845" />
+        <entry key="..\:/testProject/OlympicChannel/app/src/main/res/drawable/ic_gold_medal.xml" value="0.1845" />
+        <entry key="..\:/testProject/OlympicChannel/app/src/main/res/drawable/ic_silver_medal.xml" value="0.298" />
+        <entry key="..\:/testProject/OlympicChannel/app/src/main/res/drawable/ic_silver_medal_.xml" value="0.298" />
+        <entry key="..\:/testProject/OlympicChannel/app/src/main/res/drawable/ic_silver_medals.xml" value="0.298" />
+        <entry key="..\:/testProject/OlympicChannel/app/src/main/res/layout/activity_main.xml" value="0.1765625" />
+        <entry key="..\:/testProject/OlympicChannel/app/src/main/res/layout/dialog_simple_progress.xml" value="0.2574074074074074" />
+        <entry key="..\:/testProject/OlympicChannel/app/src/main/res/layout/fragment_athlete_detail.xml" value="0.3546875" />
+        <entry key="..\:/testProject/OlympicChannel/app/src/main/res/layout/item_athlete_score.xml" value="0.3546875" />
       </map>
     </option>
   </component>

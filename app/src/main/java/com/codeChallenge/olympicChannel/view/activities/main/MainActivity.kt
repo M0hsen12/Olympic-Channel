@@ -2,16 +2,23 @@ package com.codeChallenge.olympicChannel.view.activities.main
 
 import android.app.Dialog
 import android.os.Bundle
+import android.view.View
+import android.widget.FrameLayout
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.view.size
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.codeChallenge.olympicChannel.R
 import com.codeChallenge.olympicChannel.databinding.ActivityMainBinding
 import com.codeChallenge.olympicChannel.di.data.database.entity.GamesEntity
 import com.codeChallenge.olympicChannel.di.viewModelsInjections.InjectionViewModelProvider
+import com.codeChallenge.olympicChannel.model.Athlete
 import com.codeChallenge.olympicChannel.util.EndlessRecyclerOnScrollListener
 import com.codeChallenge.olympicChannel.util.getListForPagination
 import com.codeChallenge.olympicChannel.util.materialSimpleProgressDialog
 import com.codeChallenge.olympicChannel.view.adapter.HomePageAdapter
 import com.codeChallenge.olympicChannel.view.base.BaseActivity
+import com.codeChallenge.olympicChannel.view.fragments.FragmentAthleteDetail
 import com.codeChallenge.olympicChannel.viewModel.activities.main.MainActivityViewModel
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.*
@@ -26,7 +33,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
     override fun getLayoutId() = R.layout.activity_main
     private var disposable = CompositeDisposable()
     private var gamesList = ArrayList<GamesEntity>()
-    lateinit var progressDialog: Dialog
+    private lateinit var progressDialog: Dialog
+    private lateinit var frameLayout: FrameLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,8 +52,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
                 }
             })
         }
-
-
     }
 
     private fun setupRecyclerView(it: List<GamesEntity>) {
@@ -55,13 +61,13 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
             layoutManager = LinearLayoutManager(context)
             val myAdapter = HomePageAdapter(
                 onItemsClicked = {
-
+                    sendUserToAthleteDetailFragment(it)
                 })
             adapter = myAdapter
             val endlessHandlerHomeRv =
                 object : EndlessRecyclerOnScrollListener() {
                     override fun onLoadMore(currentPage: Int) {
-                        handlePagination(myAdapter,sortedlist,currentPage)
+                        handlePagination(myAdapter, sortedlist, currentPage)
                     }
                 }
             clearOnScrollListeners()
@@ -72,6 +78,46 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
 
         }
 
+    }
+
+    private fun sendUserToAthleteDetailFragment(it: Athlete) {
+
+        if (!this::frameLayout.isInitialized)
+            frameLayout = createFrameLayoutForFragment()
+
+
+        val athleteFragment =
+            FragmentAthleteDetail.getInstance(it.athleteId)
+
+        supportFragmentManager.beginTransaction()
+            .add(
+                frameLayout.id,
+                athleteFragment,
+                ATHLETE_FRAGMENT_TAG
+            ).addToBackStack(ATHLETE_FRAGMENT_TAG)
+            .commit()
+
+    }
+
+    private fun createFrameLayoutForFragment(): FrameLayout {
+        val frameLayout = FrameLayout(this)
+        val parentViewID = binding.parent.id
+        val frameLayoutParams = ConstraintLayout.LayoutParams(
+            0,
+            0
+        )
+        frameLayout.layoutParams = frameLayoutParams
+        frameLayout.id = View.generateViewId()
+        binding.parent.addView(frameLayout, binding.parent.size)
+        val set = ConstraintSet()
+        set.clone(binding.parent)
+        set.connect(frameLayout.id, ConstraintSet.TOP, parentViewID, ConstraintSet.TOP)
+        set.connect(frameLayout.id, ConstraintSet.LEFT, parentViewID, ConstraintSet.LEFT)
+        set.connect(frameLayout.id, ConstraintSet.RIGHT, parentViewID, ConstraintSet.RIGHT)
+        set.connect(frameLayout.id, ConstraintSet.BOTTOM, parentViewID, ConstraintSet.BOTTOM)
+        set.applyTo(binding.parent)
+
+        return frameLayout
     }
 
     private fun handlePagination(
@@ -93,9 +139,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
     }
 
 
-
     private fun initUI() {
-        progressDialog = materialSimpleProgressDialog(this)
+        progressDialog = materialSimpleProgressDialog(this,getString(R.string.syncData))
         progressDialog.show()
         viewModel = mViewModelFactoryActivity.get(this, MainActivityViewModel::class)
     }
@@ -109,6 +154,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
     companion object {
         const val PAGE_SIZE = 6
         const val PAGE_NUMBER = 0
+        const val ATHLETE_FRAGMENT_TAG = "ATHLETE_FRAGMENT_TAG"
 
     }
 }

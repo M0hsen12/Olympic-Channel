@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Olympic Channel</string>
+    <string name="medals">Medals</string>
+    <string name="bio">Bio</string>
+    <string name="syncData">please wait a bit, we are syncing data.</string>
+    <string name="fetchData">fetching data from our server, please wait…</string>
 </resources>

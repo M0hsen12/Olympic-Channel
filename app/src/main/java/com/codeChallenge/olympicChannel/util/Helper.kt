@@ -1,11 +1,20 @@
 package com.codeChallenge.olympicChannel.util
 
 import android.app.Dialog
-import android.content.*
+import android.content.Context
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextUtils
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.text.style.URLSpan
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
 import android.view.Window
-import androidx.annotation.StyleRes
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import com.codeChallenge.olympicChannel.R
 import com.codeChallenge.olympicChannel.databinding.DialogSimpleProgressBinding
@@ -18,14 +27,14 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import retrofit2.HttpException
 import java.io.IOException
-import java.util.ArrayList
+import java.util.regex.Pattern
 
 
 fun materialSimpleProgressDialog(
     context: Context,
-    @StyleRes theme: Int = R.style.ThemeDialog_Dark
+    title: String = ""
 ): Dialog {
-    return Dialog(context, theme).apply {
+    return Dialog(context, R.style.ThemeDialog_Dark).apply {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         setCancelable(false)
         val binder = DataBindingUtil.inflate<DialogSimpleProgressBinding>(
@@ -34,6 +43,7 @@ fun materialSimpleProgressDialog(
             null,
             false
         )
+        binder.title.text = title
         setContentView(binder.root)
     }
 }
@@ -72,7 +82,7 @@ suspend fun <T> safeApiCall(
     return withContext(dispatcher) {
         try {
             // throws TimeoutCancellationException
-            withTimeout(6000L){
+            withTimeout(6000L) {
                 ApiResult.Success(apiCall.invoke())
             }
         } catch (throwable: Throwable) {
@@ -88,7 +98,7 @@ suspend fun <T> safeApiCall(
                 is HttpException -> {
                     val code = throwable.code()
                     val errorResponse = convertErrorBody(throwable)
-                    Log.e(TAG, "safeApiCall: " )
+                    Log.e(TAG, "safeApiCall: ")
 //                    cLog(errorResponse)
                     ApiResult.GenericError(
                         code,
@@ -96,7 +106,7 @@ suspend fun <T> safeApiCall(
                     )
                 }
                 else -> {
-                    Log.e(TAG, "safeApiCall error:$NETWORK_ERROR_UNKNOWN " )
+                    Log.e(TAG, "safeApiCall error:$NETWORK_ERROR_UNKNOWN ")
 //                    cLog(NETWORK_ERROR_UNKNOWN)
                     ApiResult.GenericError(
                         null,
@@ -107,6 +117,7 @@ suspend fun <T> safeApiCall(
         }
     }
 }
+
 private fun convertErrorBody(throwable: HttpException): String? {
     return try {
         throwable.response()?.errorBody()?.string()
@@ -139,6 +150,7 @@ private fun convertErrorBody(throwable: HttpException): String? {
 //        }
 //    }
 //}
+
 
 
 

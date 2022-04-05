@@ -27,6 +27,12 @@ interface OlympicRoute {
     ): Observable<Response<List<AthleteScore>>>
 
 
+    @GET("/athletes/{Id}")
+    fun getAthleteDetail(
+        @Path("Id") athletesId :Int
+    ): Observable<Response<Athlete>>
+
+
 
 
 

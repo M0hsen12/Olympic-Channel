@@ -3,9 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#DCDCDC"
+        android:background="@color/backgroundColor"
         tools:context=".view.activities.main.MainActivity">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/main_rv_games"
