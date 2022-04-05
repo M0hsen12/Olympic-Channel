@@ -2,8 +2,11 @@ package com.codeChallenge.olympicChannel.view.activities.main
 
 import android.app.Dialog
 import android.os.Bundle
+import android.transition.Transition
+import android.transition.TransitionInflater
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.size
@@ -23,8 +26,8 @@ import com.codeChallenge.olympicChannel.viewModel.activities.main.MainActivityVi
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Main
-import java.util.ArrayList
 import javax.inject.Inject
+
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() {
 
@@ -60,8 +63,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
 
             layoutManager = LinearLayoutManager(context)
             val myAdapter = HomePageAdapter(
-                onItemsClicked = {
-                    sendUserToAthleteDetailFragment(it)
+                onItemsClicked = {athlete,imageView ->
+                    sendUserToAthleteDetailFragment(athlete,imageView)
                 })
             adapter = myAdapter
             val endlessHandlerHomeRv =
@@ -80,7 +83,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
 
     }
 
-    private fun sendUserToAthleteDetailFragment(it: Athlete) {
+    private fun sendUserToAthleteDetailFragment(it: Athlete, imageView: ImageView) {
 
         if (!this::frameLayout.isInitialized)
             frameLayout = createFrameLayoutForFragment()
@@ -89,12 +92,23 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
         val athleteFragment =
             FragmentAthleteDetail.getInstance(it.athleteId)
 
+        val changeTransform: Transition =
+            TransitionInflater.from(this).inflateTransition(R.transition.shared_image)
+        val explodeTransform: Transition =
+            TransitionInflater.from(this).inflateTransition(android.R.transition.explode)
+
+        athleteFragment.sharedElementReturnTransition = changeTransform
+        athleteFragment.exitTransition = explodeTransform
+
+        athleteFragment.sharedElementEnterTransition = changeTransform
+        athleteFragment.enterTransition = explodeTransform
+
         supportFragmentManager.beginTransaction()
             .add(
                 frameLayout.id,
                 athleteFragment,
                 ATHLETE_FRAGMENT_TAG
-            ).addToBackStack(ATHLETE_FRAGMENT_TAG)
+            ).addSharedElement(imageView,"athleteProfile").addToBackStack(ATHLETE_FRAGMENT_TAG)
             .commit()
 
     }

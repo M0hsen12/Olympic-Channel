@@ -2,18 +2,10 @@ package com.codeChallenge.olympicChannel.view.fragments
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.TextPaint
-import android.text.method.LinkMovementMethod
-import android.text.style.ClickableSpan
-import android.util.Log
+import android.transition.TransitionInflater
 import android.view.View
-import android.widget.TextView
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.codeChallenge.olympicChannel.BuildConfig
@@ -23,11 +15,12 @@ import com.codeChallenge.olympicChannel.di.viewModelsInjections.InjectionViewMod
 import com.codeChallenge.olympicChannel.model.Athlete
 import com.codeChallenge.olympicChannel.model.AthleteScore
 import com.codeChallenge.olympicChannel.util.LinkUtil
+import com.codeChallenge.olympicChannel.util.SimplePlayer
 import com.codeChallenge.olympicChannel.util.materialSimpleProgressDialog
-import com.codeChallenge.olympicChannel.view.activities.main.MainActivity
 import com.codeChallenge.olympicChannel.view.adapter.AthleteScoreAdapter
 import com.codeChallenge.olympicChannel.view.base.BaseFragment
 import com.codeChallenge.olympicChannel.viewModel.fragments.athleteDetail.FragmentAthleteDetailViewModel
+
 import com.google.android.material.shape.CornerFamily
 import javax.inject.Inject
 
@@ -40,6 +33,7 @@ class FragmentAthleteDetail :
     lateinit var mViewModelFactoryActivity: InjectionViewModelProvider<FragmentAthleteDetailViewModel>
     override fun getLayoutId() = R.layout.fragment_athlete_detail
     private lateinit var progressDialog: Dialog
+    private var player = SimplePlayer()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,9 +55,10 @@ class FragmentAthleteDetail :
     @SuppressLint("SetTextI18n")
     private fun setupUI(pair: Pair<Athlete?, List<AthleteScore>>) {
         binding.apply {
+            buildPlayer()
             progressDialog.dismiss()
             detailGroup.visibility = View.VISIBLE
-            detailTitle.text = "${pair.first?.name} ${pair.first?.surname} details."
+            detailTitle.text = "${pair.first?.name} ${pair.first?.surname} details"
             detailAthleteName.text = "Name : ${pair.first?.name} ${pair.first?.surname}"
             detailAthleteBirth.text = "DOB : ${pair.first?.dateOfBirth}"
             detailAthleteHeight.text = "Height : ${pair.first?.height}"
@@ -100,17 +95,47 @@ class FragmentAthleteDetail :
         }
     }
 
+    private fun buildPlayer() {
+        player.apply {
+            initPLayer(viewModel?.mDataManager?.context!!)
+            setMediaSource(DUMMY_HLS_LINK)
+            addListenerToPlayer(
+                onErrorListener = {
+                    //do something on error
+                },
+                onPlayerStart = {
+                    //do on start
+                },
+                onPlayerEnded = {
+                    // do on end
+                })
+            setPlayerFromView(binding.videoPlayerView)
+        }
+
+    }
+
+
     private fun initUI() {
         viewModel = mViewModelFactoryActivity.get(this, FragmentAthleteDetailViewModel::class)
 
         arguments?.getString(EXTRA_ATHLETE_ID)?.let {
             viewModel?.getDetailOfAthlete(it.toInt())
+            sharedElementEnterTransition = TransitionInflater.from(requireContext())
+                .inflateTransition(R.transition.shared_image)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        player.stopPlayer()
+        player.releasePlayer()
     }
 
 
     companion object {
         private const val EXTRA_ATHLETE_ID = "EXTRA_ATHLETE_ID"
+        private const val DUMMY_HLS_LINK =
+            "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" // i didnt have link for youtube
 
         fun getInstance(
             athlete_ID: String?

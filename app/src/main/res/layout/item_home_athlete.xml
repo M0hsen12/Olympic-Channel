@@ -17,6 +17,7 @@
 
         <ImageView
             android:id="@+id/item_athlete_pic"
+            android:transitionName="athleteProfile"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scaleType="centerCrop"

@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.recyclerview.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
@@ -19,7 +20,7 @@ import kotlin.math.ceil
 
 
 class HomePageAdapter(
-    private val onItemsClicked: (game: Athlete) -> Unit
+    private val onItemsClicked: (game: Athlete,imageView:ImageView) -> Unit
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -90,19 +91,19 @@ class HomePageAdapter(
 
     class HomeBasicViewHolder(
         itemView: View,
-        private val onItemsClicked: (game: Athlete) -> Unit
+        private val onItemsClicked: (game: Athlete,imageView:ImageView) -> Unit
     ) : RecyclerView.ViewHolder(itemView) {
         fun bind(item: GamesEntity) = with(itemView) {
             itemView.item_home_title.text = "${item.city}  ${item.year}"
             itemView.item_home_rv.apply {
                 layoutManager = LinearLayoutManager(this.context, HORIZONTAL, false)
-                val myAdapter = AthleteAdapter {
-                    onItemsClicked.invoke(it)
+                val myAdapter = AthleteAdapter { athlete,imgView->
+                    onItemsClicked.invoke(athlete,imgView)
                 }
                 adapter = myAdapter
 
                 val list = orderListByGlobalPoint(item.athletes, item.year)
-                myAdapter.submitList(list, item.year)
+                myAdapter.submitList(list)
 
             }
         }

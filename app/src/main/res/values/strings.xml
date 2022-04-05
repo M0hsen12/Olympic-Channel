@@ -4,4 +4,6 @@
     <string name="bio">Bio</string>
     <string name="syncData">please wait a bit, we are syncing data.</string>
     <string name="fetchData">fetching data from our server, please wait…</string>
+    <string name="olympic_athletes">Olympic Athletes</string>
+    <string name="optional_player">optional player</string>
 </resources>

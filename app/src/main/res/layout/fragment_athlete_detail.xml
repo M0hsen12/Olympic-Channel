@@ -62,13 +62,13 @@
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/detail_athlete_pic"
+                android:transitionName="athleteProfile"
                 android:layout_width="match_parent"
                 android:layout_height="350dp"
                 android:layout_marginTop="4dp"
                 android:scaleType="centerCrop"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
-                tools:src="@android:drawable/ic_input_get" />
-
+                tools:src="@android:color/darker_gray" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/detail_athlete_info"
@@ -86,7 +86,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
-                    app:constraint_referenced_ids="detail_athlete_bio_txt,detail_athlete_medals_txt"
+                    app:constraint_referenced_ids="detail_athlete_optional_txt,video_player_view,detail_athlete_bio_txt,detail_athlete_medals_txt"
                     tools:visibility="visible" />
 
                 <TextView
@@ -174,13 +174,36 @@
                     android:layout_marginBottom="24dp"
                     android:textColor="@color/black"
                     android:textSize="13sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/detail_athlete_bio_txt"
                     tools:text="some thingsome thingsome thingsome thingsome thingsome thingsome thing" />
 
+                <TextView
+                    android:id="@+id/detail_athlete_optional_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16sp"
+                    android:text="@string/optional_player"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/detail_athlete_bio" />
 
+                <com.google.android.exoplayer2.ui.PlayerView
+                    android:id="@+id/video_player_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="24dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="16:9"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/detail_athlete_optional_txt"
+                    app:layout_constraintVertical_bias="0.0" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 

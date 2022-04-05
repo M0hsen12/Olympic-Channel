@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -15,9 +16,8 @@ import com.codeChallenge.olympicChannel.model.Athlete
 import kotlinx.android.synthetic.main.item_home_athlete.view.*
 
 
-class AthleteAdapter(private val onItemsClicked: ((game: Athlete) -> Unit)? = null) :
+class AthleteAdapter(private val onItemsClicked: ((game: Athlete,imageView: ImageView) -> Unit)? = null) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    var currentYear = 0
 
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Athlete>() {
 
@@ -48,7 +48,7 @@ class AthleteAdapter(private val onItemsClicked: ((game: Athlete) -> Unit)? = nu
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is ViewHolderClass -> {
-                holder.bind(differ.currentList.get(position), currentYear)
+                holder.bind(differ.currentList.get(position))
             }
         }
     }
@@ -57,29 +57,31 @@ class AthleteAdapter(private val onItemsClicked: ((game: Athlete) -> Unit)? = nu
         return differ.currentList.size
     }
 
-    fun submitList(list: List<Athlete>, year: Int) {
-        currentYear = year
+    fun submitList(list: List<Athlete>) {
         differ.submitList(list)
     }
 
     class ViewHolderClass
     constructor(
         itemView: View,
-        private val onItemsClicked: ((game: Athlete) -> Unit)? = null
+        private val onItemsClicked: ((game: Athlete,imageView:ImageView) -> Unit)? = null
     ) : RecyclerView.ViewHolder(itemView) {
 
         @SuppressLint("CheckResult")
-        fun bind(item: Athlete, currentYear: Int) = with(itemView) {
-            itemView.setOnClickListener {
-                onItemsClicked?.invoke(item)
+        fun bind(item: Athlete) = with(itemView) {
+            itemView.item_athlete_pic.apply {
+                setOnClickListener {
+                    onItemsClicked?.invoke(item,this)
+                }
+                Glide.with(this.context)
+                    .load("${BuildConfig.baseUrl}/athletes/${item.athleteId}/photo")
+                    .into(this)
             }
 
 
 
             itemView.item_athlete_name.text = "${item.name} ${item.surname}"
-            Glide.with(this.context)
-                .load("${BuildConfig.baseUrl}/athletes/${item.athleteId}/photo")
-                .into(itemView.item_athlete_pic)
+
 
 
         }

@@ -12,6 +12,7 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class FragmentAthleteDetailViewModel @Inject constructor(
@@ -30,7 +31,7 @@ class FragmentAthleteDetailViewModel @Inject constructor(
                 mDataManager.networkManager.getOlympicRoute().getScoreOfAthlete(athleteId)
             ) { athleteDetail, athleteScore ->
                 Pair(athleteDetail, athleteScore)
-            }.subscribeOn(Schedulers.io())
+            }.subscribeOn(Schedulers.io()).delay (1,TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnError { Log.e("TAG", "getDetailOfAthlete: ${it.localizedMessage}") }
                 .subscribe {

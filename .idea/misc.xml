@@ -17,10 +17,11 @@
         <entry key="..\:/testProject/OlympicChannel/app/src/main/res/drawable/ic_silver_medal.xml" value="0.298" />
         <entry key="..\:/testProject/OlympicChannel/app/src/main/res/drawable/ic_silver_medal_.xml" value="0.298" />
         <entry key="..\:/testProject/OlympicChannel/app/src/main/res/drawable/ic_silver_medals.xml" value="0.298" />
-        <entry key="..\:/testProject/OlympicChannel/app/src/main/res/layout/activity_main.xml" value="0.1765625" />
+        <entry key="..\:/testProject/OlympicChannel/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/testProject/OlympicChannel/app/src/main/res/layout/dialog_simple_progress.xml" value="0.2574074074074074" />
         <entry key="..\:/testProject/OlympicChannel/app/src/main/res/layout/fragment_athlete_detail.xml" value="0.3546875" />
         <entry key="..\:/testProject/OlympicChannel/app/src/main/res/layout/item_athlete_score.xml" value="0.3546875" />
+        <entry key="..\:/testProject/OlympicChannel/app/src/main/res/layout/item_home_athlete.xml" value="0.3546875" />
       </map>
     </option>
   </component>
