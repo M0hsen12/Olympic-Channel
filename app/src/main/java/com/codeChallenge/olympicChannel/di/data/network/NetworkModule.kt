@@ -61,7 +61,6 @@ class NetworkModule {
             .baseUrl(BuildConfig.baseUrl)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
-//            .addConverterFactory(LoganSquareCo.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
             .build()
     }

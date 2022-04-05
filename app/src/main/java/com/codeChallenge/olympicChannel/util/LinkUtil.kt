@@ -46,10 +46,6 @@ object LinkUtil{
 
     }
 
-    interface OnClickListener {
-        fun onLinkClicked(link: String?)
-        fun onClicked()
-    }
 
     internal class SensibleUrlSpan(
         url: String?,

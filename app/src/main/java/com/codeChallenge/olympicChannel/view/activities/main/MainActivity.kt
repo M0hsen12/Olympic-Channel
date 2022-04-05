@@ -167,7 +167,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>() 
 
     companion object {
         const val PAGE_SIZE = 6
-        const val PAGE_NUMBER = 0
         const val ATHLETE_FRAGMENT_TAG = "ATHLETE_FRAGMENT_TAG"
 
     }

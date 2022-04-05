@@ -2,7 +2,6 @@ package com.codeChallenge.olympicChannel.view.fragments
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.net.Uri
 import android.os.Bundle
 import android.transition.TransitionInflater
 import android.view.View
@@ -52,47 +51,60 @@ class FragmentAthleteDetail :
         }
     }
 
-    @SuppressLint("SetTextI18n")
+
     private fun setupUI(pair: Pair<Athlete?, List<AthleteScore>>) {
+        progressDialog.dismiss()
+        binding.detailGroup.visibility = View.VISIBLE
+        binding.detailBack.setOnClickListener {
+            activity?.supportFragmentManager?.popBackStackImmediate()
+        }
+
+        handleAthleteText(pair.first)
+        handleAthleteImage(pair.first)
+        handleAthleteRv(pair.second)
+        buildPlayer()
+
+    }
+
+    private fun handleAthleteRv(list: List<AthleteScore>) {
+        binding.detailAthleteRv.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            val myAdapter = AthleteScoreAdapter()
+            adapter = myAdapter
+            myAdapter.submitList(list)
+        }
+
+    }
+
+    private fun handleAthleteImage(athlete: Athlete?) {
+        binding.detailAthletePic.apply {
+            val radius = resources.getDimension(R.dimen.default_corner_radius)
+            Glide.with(this)
+                .load("${BuildConfig.baseUrl}/athletes/${athlete?.athleteId}/photo")
+                .into(this)
+            this.shapeAppearanceModel = shapeAppearanceModel
+                .toBuilder()
+                .setTopRightCorner(CornerFamily.ROUNDED, radius)
+                .setTopLeftCorner(CornerFamily.ROUNDED, radius)
+                .build()
+        }
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun handleAthleteText(athlete: Athlete?) {
         binding.apply {
-            buildPlayer()
-            progressDialog.dismiss()
-            detailGroup.visibility = View.VISIBLE
-            detailTitle.text = "${pair.first?.name} ${pair.first?.surname} details"
-            detailAthleteName.text = "Name : ${pair.first?.name} ${pair.first?.surname}"
-            detailAthleteBirth.text = "DOB : ${pair.first?.dateOfBirth}"
-            detailAthleteHeight.text = "Height : ${pair.first?.height}"
-            detailAthleteWeight.text = "Weight : ${pair.first?.weight}"
+            detailTitle.text = "${athlete?.name} ${athlete?.surname} details"
+            detailAthleteName.text = "Name : ${athlete?.name} ${athlete?.surname}"
+            detailAthleteBirth.text = "DOB : ${athlete?.dateOfBirth}"
+            detailAthleteHeight.text = "Height : ${athlete?.height}"
+            detailAthleteWeight.text = "Weight : ${athlete?.weight}"
             detailAthleteBio.apply {
-                text = pair.first?.bio
+                text = athlete?.bio
                 LinkUtil.autoLink(this)
             }
-
-            detailAthletePic.apply {
-                val radius = resources.getDimension(R.dimen.default_corner_radius)
-                Glide.with(this)
-                    .load("${BuildConfig.baseUrl}/athletes/${pair.first?.athleteId}/photo")
-                    .into(this)
-                this.shapeAppearanceModel = shapeAppearanceModel
-                    .toBuilder()
-                    .setTopRightCorner(CornerFamily.ROUNDED, radius)
-                    .setTopLeftCorner(CornerFamily.ROUNDED, radius)
-                    .build()
-            }
-
-            detailAthleteRv.apply {
-                layoutManager = LinearLayoutManager(requireContext())
-                val myAdapter = AthleteScoreAdapter()
-                adapter = myAdapter
-                myAdapter.submitList(pair.second)
-            }
-
-            detailBack.setOnClickListener {
-                activity?.supportFragmentManager?.popBackStackImmediate()
-
-            }
-
         }
+
     }
 
     private fun buildPlayer() {
@@ -120,8 +132,7 @@ class FragmentAthleteDetail :
 
         arguments?.getString(EXTRA_ATHLETE_ID)?.let {
             viewModel?.getDetailOfAthlete(it.toInt())
-            sharedElementEnterTransition = TransitionInflater.from(requireContext())
-                .inflateTransition(R.transition.shared_image)
+
         }
     }
 
