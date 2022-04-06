@@ -1,6 +1,6 @@
 package com.codeChallenge.olympicChannel.di.modules
 
-import com.codeChallenge.olympicChannel.view.fragments.FragmentAthleteDetail
+import com.codeChallenge.olympicChannel.view.fragments.detail.FragmentAthleteDetail
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Olympic Channel</string>
+    <string name="app_name">Olympic Athletes</string>
     <string name="medals">Medals</string>
     <string name="bio">Bio</string>
     <string name="syncData">please wait a bit, we are syncing data.</string>

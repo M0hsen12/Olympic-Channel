@@ -43,7 +43,7 @@ fun getListForPagination(
             returnList.addAll(sortedlist.slice(6..11))
 
         2 ->
-            returnList.addAll(sortedlist.slice(11..sortedlist.size.minus(1)))
+            returnList.addAll(sortedlist.slice(12..sortedlist.size.minus(1)))
 
     }
 

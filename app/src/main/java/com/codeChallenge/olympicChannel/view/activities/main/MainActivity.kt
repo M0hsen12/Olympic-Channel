@@ -21,7 +21,7 @@ import com.codeChallenge.olympicChannel.util.getListForPagination
 import com.codeChallenge.olympicChannel.util.materialSimpleProgressDialog
 import com.codeChallenge.olympicChannel.view.adapter.HomePageAdapter
 import com.codeChallenge.olympicChannel.view.base.BaseActivity
-import com.codeChallenge.olympicChannel.view.fragments.FragmentAthleteDetail
+import com.codeChallenge.olympicChannel.view.fragments.detail.FragmentAthleteDetail
 import com.codeChallenge.olympicChannel.viewModel.activities.main.MainActivityViewModel
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.coroutines.*

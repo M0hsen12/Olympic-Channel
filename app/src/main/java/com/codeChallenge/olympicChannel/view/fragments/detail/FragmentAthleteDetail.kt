@@ -1,9 +1,8 @@
-package com.codeChallenge.olympicChannel.view.fragments
+package com.codeChallenge.olympicChannel.view.fragments.detail
 
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
-import android.transition.TransitionInflater
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -146,7 +145,7 @@ class FragmentAthleteDetail :
     companion object {
         private const val EXTRA_ATHLETE_ID = "EXTRA_ATHLETE_ID"
         private const val DUMMY_HLS_LINK =
-            "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" // i didnt have link for youtube
+            "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8" // i could find any hls or mp4  link for youtube , but if we change this link source will change
 
         fun getInstance(
             athlete_ID: String?
