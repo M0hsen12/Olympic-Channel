@@ -1,4 +1,4 @@
-# Android Coding Challenge
+## Android Coding Challenge
 hello
 first of all thx for opportunity u guys giving me.all
 on start of any project i get piece of paper and pen i start writing a something like road map , thing i should do first and
@@ -24,20 +24,21 @@ even now using MVVM i have very little time for test ,lets hope every thing went
 but if i have enough time  i would use both Clean architecture and MVVM ,  basically in clean architecture`s
 presentation layer we can use any design pattern we want , including MVVM , MVI , MVP and so on
 
-##dependency injection
+## dependency injection
 basically we have two major di library dagger2.0 and hilt
 dagger is here for long time and passed its test  in very aspect first choice for every one ,
 but hilt on other hand is new compare to dagger and Hilt is built on top of the Dagger and using it feel like cheating :))
 its very easy just need some annotation , i choose dagger because i felt like i should use original library
 and more use to working with dagger than hilt.
 
-##database
+## database
 well we got load of option but Room persistence is best in every way and its google`s library ,Room is a officialORM library by Android 
 i could use green db or realm or sqlite itself but i decide to go room its easy to use and light wight library
 
 
-##unit test
-im comfortable with junit test 4 and 5 and espresso and mockito but sadly for reason i wrote above i start code very  late.
+## unit test
+im comfortable with junit test 4 and 5 and espresso and mockito
+but sadly for reason i wrote above i start code very  late.
 im so sry that i could not write test for project but definitely im good with test 
 
 and on other staff,its just usual suspect 
